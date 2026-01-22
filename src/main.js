@@ -13,6 +13,7 @@ const galleryEmpty = document.getElementById('galleryEmpty');
 const showcaseGrid = document.getElementById('showcaseGrid');
 const filterBtns = document.querySelectorAll('.filter-btn');
 const lightbox = document.getElementById('lightbox');
+const lightboxContent = document.querySelector('.lightbox-content');
 const lightboxImage = document.getElementById('lightboxImage');
 const lightboxTitle = document.getElementById('lightboxTitle');
 const lightboxDescription = document.getElementById('lightboxDescription');
@@ -22,6 +23,7 @@ const lightboxNext = document.getElementById('lightboxNext');
 
 let currentArtworkIndex = 0;
 let currentFilteredArtworks = [];
+let currentLightboxVideo = null;
 
 // ============================================
 // INITIALIZATION
@@ -116,15 +118,42 @@ function renderGallery(artworksToRender) {
     const item = document.createElement('div');
     item.className = 'gallery-item';
     item.dataset.index = index;
-    item.innerHTML = `
-      <img src="${artwork.image}" alt="${artwork.title}" loading="lazy" />
-      <div class="gallery-item-overlay">
-        <div class="gallery-item-info">
-          <h4>${artwork.title}</h4>
-          <p>${artwork.description}</p>
+
+    // Check if it's a video or image
+    if (artwork.type === 'video') {
+      item.innerHTML = `
+        <video src="${artwork.image}" muted loop playsinline preload="metadata"></video>
+        <div class="gallery-item-overlay">
+          <div class="gallery-item-info">
+            <h4>${artwork.title}</h4>
+            <p>${artwork.description}</p>
+          </div>
         </div>
-      </div>
-    `;
+        <div class="video-indicator">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+            <polygon points="5 3 19 12 5 21 5 3"/>
+          </svg>
+        </div>
+      `;
+
+      // Play video on hover
+      const video = item.querySelector('video');
+      item.addEventListener('mouseenter', () => video.play());
+      item.addEventListener('mouseleave', () => {
+        video.pause();
+        video.currentTime = 0;
+      });
+    } else {
+      item.innerHTML = `
+        <img src="${artwork.image}" alt="${artwork.title}" loading="lazy" />
+        <div class="gallery-item-overlay">
+          <div class="gallery-item-info">
+            <h4>${artwork.title}</h4>
+            <p>${artwork.description}</p>
+          </div>
+        </div>
+      `;
+    }
 
     item.addEventListener('click', () => openLightbox(index));
     galleryGrid.appendChild(item);
@@ -210,10 +239,7 @@ function openLightbox(index) {
 
   if (!artwork) return;
 
-  lightboxImage.src = artwork.image;
-  lightboxImage.alt = artwork.title;
-  lightboxTitle.textContent = artwork.title;
-  lightboxDescription.textContent = artwork.description;
+  updateLightboxContent();
 
   lightbox.classList.add('active');
   document.body.style.overflow = 'hidden';
@@ -222,6 +248,16 @@ function openLightbox(index) {
 function closeLightbox() {
   lightbox.classList.remove('active');
   document.body.style.overflow = '';
+
+  // Stop any playing video
+  if (currentLightboxVideo) {
+    currentLightboxVideo.pause();
+    currentLightboxVideo.remove();
+    currentLightboxVideo = null;
+  }
+
+  // Show the image element again
+  lightboxImage.style.display = 'block';
 }
 
 function showPrevArtwork() {
@@ -242,8 +278,36 @@ function updateLightboxContent() {
   const artwork = currentFilteredArtworks[currentArtworkIndex];
   if (!artwork) return;
 
-  lightboxImage.src = artwork.image;
-  lightboxImage.alt = artwork.title;
+  // Remove any existing video
+  if (currentLightboxVideo) {
+    currentLightboxVideo.pause();
+    currentLightboxVideo.remove();
+    currentLightboxVideo = null;
+  }
+
+  if (artwork.type === 'video') {
+    // Hide image, show video
+    lightboxImage.style.display = 'none';
+
+    const video = document.createElement('video');
+    video.src = artwork.image;
+    video.controls = true;
+    video.autoplay = true;
+    video.loop = true;
+    video.className = 'lightbox-video';
+    video.style.maxWidth = '100%';
+    video.style.maxHeight = '75vh';
+    video.style.borderRadius = 'var(--radius-lg)';
+
+    lightboxContent.insertBefore(video, lightboxContent.querySelector('.lightbox-info'));
+    currentLightboxVideo = video;
+  } else {
+    // Show image
+    lightboxImage.style.display = 'block';
+    lightboxImage.src = artwork.image;
+    lightboxImage.alt = artwork.title;
+  }
+
   lightboxTitle.textContent = artwork.title;
   lightboxDescription.textContent = artwork.description;
 }
