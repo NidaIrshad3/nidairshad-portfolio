@@ -26,19 +26,19 @@ export const artworks = [
   // ============================================
   {
     id: 1,
-    title: "Baji",
+    title: "Girl",
     description: "Character illustration",
     category: "digital",
-    image: "/baji.jpeg",
+    image: "/Girl.jpeg",
     type: "image",
     featured: true
   },
   {
     id: 2,
-    title: "Portrait Study",
+    title: "Guy In Black",
     description: "Digital portrait artwork",
     category: "digital",
-    image: "/blackguy.jpeg",
+    image: "/Giu_In_Black.jpeg",
     type: "image",
     featured: false
   },
@@ -47,25 +47,25 @@ export const artworks = [
     title: "Ghost",
     description: "Spooky character art",
     category: "digital",
-    image: "/ghost.jpeg",
+    image: "/Ghost.jpeg",
     type: "image",
     featured: false
   },
   {
     id: 4,
-    title: "Light Study",
+    title: "Person Under Light",
     description: "Lighting and atmosphere exploration",
     category: "digital",
-    image: "/light.jpeg",
+    image: "/Person_Standing_Under_Light.jpeg",
     type: "image",
     featured: false
   },
   {
     id: 5,
-    title: "Mute",
+    title: "Mute Person",
     description: "Character concept",
     category: "digital",
-    image: "/mute.jpeg",
+    image: "/Mute_Person.jpeg",
     type: "image",
     featured: false
   },
@@ -74,7 +74,7 @@ export const artworks = [
     title: "Person",
     description: "Figure study",
     category: "digital",
-    image: "/person.jpeg",
+    image: "/Person.jpeg",
     type: "image",
     featured: false
   },
@@ -87,7 +87,7 @@ export const artworks = [
     title: "Fox",
     description: "Cute pixel fox",
     category: "pixel",
-    image: "/fox.jpeg",
+    image: "/Fox.jpeg",
     type: "image",
     featured: true
   },
@@ -96,7 +96,7 @@ export const artworks = [
     title: "Rabbit",
     description: "Pixel bunny character",
     category: "pixel",
-    image: "/rabbit.jpeg",
+    image: "/Rabbit.jpeg",
     type: "image",
     featured: false
   },
